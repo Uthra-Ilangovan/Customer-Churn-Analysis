@@ -84,16 +84,59 @@ Data cleaning and transformation was done using Power Query in Power BI:
 
 # 📊 Measures Used (DAX)
 
+### Total Customers
+
 ```DAX
-Total Customers = COUNT(ChurnDataset[CustomerID])
+Total Customers =
+COUNT(ChurnDataset[CustomerID])
+```
+
+### Churned Customers
+
+```DAX
 Churned Customers =
 CALCULATE(
     COUNTA(ChurnDataset[CustomerID]),
-    ChurnDataset[Churn] IN { "Yes" }
+    ChurnDataset[Churn] = "Yes"
 )
+```
 
+### Retained Customers
+
+```DAX
 Retained Customers =
 CALCULATE(
     COUNTA(ChurnDataset[CustomerID]),
+    ChurnDataset[Churn] = "No"
+)
+```
+
+### Churn Rate %
+
+```DAX
+Churn Rate % =
+DIVIDE([Churned Customers], [Total Customers], 0)
+```
+
+### Monthly Revenue Loss
+
+```DAX
+Monthly Revenue Loss =
+CALCULATE(
+    SUM(ChurnDataset[MonthlyCharges]),
+    ChurnDataset[Churn] = "Yes"
+)
+```
+
+### Revenue Loss %
+
+```DAX
+Revenue Loss % =
+DIVIDE(
+    [Monthly Revenue Loss],
+    SUM(ChurnDataset[MonthlyCharges]),
+    0
+)
+```
     ChurnDataset[Churn] IN { "No" }
 )
